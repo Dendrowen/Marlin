@@ -1,7 +1,7 @@
 /**
  * Marlin 3D Printer Firmware
  *
- * Copyright (C) 2016 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  * Copyright (c) 2016 Bob Cousins bobcousins42@googlemail.com
  * Copyright (c) 2017 Victor Perez
  *
@@ -19,19 +19,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
-#ifndef _HAL_TIMERS_STM32F4_H
-#define _HAL_TIMERS_STM32F4_H
-
-// --------------------------------------------------------------------------
-// Includes
-// --------------------------------------------------------------------------
+#pragma once
 
 #include <stdint.h>
 
-// --------------------------------------------------------------------------
+// ------------------------
 // Defines
-// --------------------------------------------------------------------------
+// ------------------------
 
 #define FORCE_INLINE __attribute__((always_inline)) inline
 
@@ -67,19 +61,19 @@
 #ifdef STM32GENERIC
   extern void TC5_Handler();
   extern void TC7_Handler();
-  #define HAL_STEP_TIMER_ISR void TC5_Handler()
-  #define HAL_TEMP_TIMER_ISR void TC7_Handler()
+  #define HAL_STEP_TIMER_ISR() void TC5_Handler()
+  #define HAL_TEMP_TIMER_ISR() void TC7_Handler()
 #else
   extern void TC5_Handler(stimer_t *htim);
   extern void TC7_Handler(stimer_t *htim);
-  #define HAL_STEP_TIMER_ISR void TC5_Handler(stimer_t *htim)
-  #define HAL_TEMP_TIMER_ISR void TC7_Handler(stimer_t *htim)
+  #define HAL_STEP_TIMER_ISR() void TC5_Handler(stimer_t *htim)
+  #define HAL_TEMP_TIMER_ISR() void TC7_Handler(stimer_t *htim)
 #endif
 
 
-// --------------------------------------------------------------------------
+// ------------------------
 // Types
-// --------------------------------------------------------------------------
+// ------------------------
 
 #ifdef STM32GENERIC
   typedef struct {
@@ -91,15 +85,15 @@
   typedef stimer_t stm32f4_timer_t;
 #endif
 
-// --------------------------------------------------------------------------
+// ------------------------
 // Public Variables
-// --------------------------------------------------------------------------
+// ------------------------
 
 extern stm32f4_timer_t TimerHandle[];
 
-// --------------------------------------------------------------------------
+// ------------------------
 // Public functions
-// --------------------------------------------------------------------------
+// ------------------------
 
 void HAL_timer_start(const uint8_t timer_num, const uint32_t frequency);
 void HAL_timer_enable_interrupt(const uint8_t timer_num);
@@ -120,12 +114,6 @@ FORCE_INLINE static hal_timer_t HAL_timer_get_compare(const uint8_t timer_num) {
   return __HAL_TIM_GET_AUTORELOAD(&TimerHandle[timer_num].handle);
 }
 
-FORCE_INLINE static void HAL_timer_restrain(const uint8_t timer_num, const uint16_t interval_ticks) {
-  const hal_timer_t mincmp = HAL_timer_get_count(timer_num) + interval_ticks;
-  if (HAL_timer_get_compare(timer_num) < mincmp)
-    HAL_timer_set_compare(timer_num, mincmp);
-}
-
 #ifdef STM32GENERIC
   FORCE_INLINE static void HAL_timer_isr_prologue(const uint8_t timer_num) {
     if (__HAL_TIM_GET_FLAG(&TimerHandle[timer_num].handle, TIM_FLAG_UPDATE) == SET)
@@ -136,5 +124,3 @@ FORCE_INLINE static void HAL_timer_restrain(const uint8_t timer_num, const uint1
 #endif
 
 #define HAL_timer_isr_epilogue(TIMER_NUM)
-
-#endif // _HAL_TIMERS_STM32F4_H

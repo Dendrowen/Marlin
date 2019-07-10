@@ -1,9 +1,9 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2016 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
- * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
+ * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,24 +19,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+#pragma once
 
 /**
  * Einsy-Retro pin assignments
  */
 
 #ifndef __AVR_ATmega2560__
-  #error "Oops!  Make sure you have 'Arduino Mega 2560 or Rambo' selected from the 'Tools -> Boards' menu."
+  #error "Oops! Select 'Arduino Mega 2560 or Rambo' in 'Tools > Board.'"
 #endif
 
-#define BOARD_NAME         "Einsy Retro"
+#define BOARD_NAME "Einsy Retro"
 
 //
 // TMC2130 Configuration_adv defaults for EinsyRetro
 //
-#if DISABLED(HAVE_TMC2130)
-  #error "You must enable TMC2130 support in Configuration_adv.h for EinsyRetro."
-#elif DISABLED(X_IS_TMC2130) || DISABLED(Y_IS_TMC2130) || DISABLED(Z_IS_TMC2130) || DISABLED(E0_IS_TMC2130)
-  #error "You must enable ([XYZ]|E0)_IS_TMC2130 in Configuration_adv.h for EinsyRetro."
+#if !AXIS_DRIVER_TYPE_X(TMC2130) || !AXIS_DRIVER_TYPE_Y(TMC2130) || !AXIS_DRIVER_TYPE_Z(TMC2130) || !AXIS_DRIVER_TYPE_E0(TMC2130)
+  #error "You must set ([XYZ]|E0)_DRIVER_TYPE to TMC2130 in Configuration.h for EinsyRetro."
 #endif
 
 // TMC2130 Diag Pins (currently just for reference)
@@ -64,7 +63,7 @@
 
 #else
 
-  #if X_HOME_DIR == -1
+  #if X_HOME_DIR < 0
     #define X_MIN_PIN      X_DIAG_PIN
     #define X_MAX_PIN      81
   #else
@@ -72,7 +71,7 @@
     #define X_MAX_PIN      X_DIAG_PIN
   #endif
 
-  #if Y_HOME_DIR == -1
+  #if Y_HOME_DIR < 0
     #define Y_MIN_PIN      Y_DIAG_PIN
     #define Y_MAX_PIN      57
   #else
@@ -151,7 +150,7 @@
 //
 // use P1 connector for spindle pins
 #define SPINDLE_LASER_PWM_PIN     9   // MUST BE HARDWARE PWM
-#define SPINDLE_LASER_ENABLE_PIN 18   // Pin should have a pullup!
+#define SPINDLE_LASER_ENA_PIN    18   // Pin should have a pullup!
 #define SPINDLE_DIR_PIN          19
 
 //
@@ -164,7 +163,7 @@
 //
 // LCD / Controller
 //
-#if ENABLED(ULTRA_LCD)
+#if HAS_SPI_LCD
 
   #define KILL_PIN         32
 
@@ -178,8 +177,8 @@
       #define BTN_EN2         19
     #else
       #define LCD_PINS_RS     82
-      #define LCD_PINS_ENABLE 18
-      #define LCD_PINS_D4     19
+      #define LCD_PINS_ENABLE 18   // On 0.6b, use 61
+      #define LCD_PINS_D4     19   // On 0.6b, use 59
       #define LCD_PINS_D5     70
       #define LCD_PINS_D6     85
       #define LCD_PINS_D7     71
@@ -192,4 +191,4 @@
     #define SD_DETECT_PIN     15
 
   #endif // NEWPANEL
-#endif // ULTRA_LCD
+#endif // HAS_SPI_LCD

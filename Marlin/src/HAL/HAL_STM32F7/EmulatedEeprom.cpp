@@ -1,6 +1,6 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2016 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,109 +20,79 @@
 #ifdef STM32F7
 
 /**
- * Description: functions for I2C connected external EEPROM.
+ * Description: Functions for a Flash emulated EEPROM
  * Not platform dependent.
  */
 
 #include "../../inc/MarlinConfig.h"
 
-// --------------------------------------------------------------------------
+// ------------------------
 // Includes
-// --------------------------------------------------------------------------
+// ------------------------
 
 #include "HAL.h"
 #include "EEPROM_Emul/eeprom_emul.h"
 
-
-// --------------------------------------------------------------------------
-// Externals
-// --------------------------------------------------------------------------
-
-// --------------------------------------------------------------------------
+// ------------------------
 // Local defines
-// --------------------------------------------------------------------------
-
-// --------------------------------------------------------------------------
-// Types
-// --------------------------------------------------------------------------
-
-// --------------------------------------------------------------------------
-// Variables
-// --------------------------------------------------------------------------
-
-// --------------------------------------------------------------------------
-// Public Variables
-// --------------------------------------------------------------------------
-
-// --------------------------------------------------------------------------
-// Private Variables
-// --------------------------------------------------------------------------
-static bool eeprom_initialised = false;
-// --------------------------------------------------------------------------
-// Function prototypes
-// --------------------------------------------------------------------------
-
-// --------------------------------------------------------------------------
-// Private functions
-// --------------------------------------------------------------------------
-
-// --------------------------------------------------------------------------
-// Public functions
-// --------------------------------------------------------------------------
+// ------------------------
 
 // FLASH_FLAG_PGSERR (Programming Sequence Error) was renamed to
 // FLASH_FLAG_ERSERR (Erasing Sequence Error) in STM32F7
 #define FLASH_FLAG_PGSERR FLASH_FLAG_ERSERR
 
-// --------------------------------------------------------------------------
-// EEPROM
-// --------------------------------------------------------------------------
+// ------------------------
+// Private Variables
+// ------------------------
 
+static bool eeprom_initialized = false;
+
+// ------------------------
+// Public functions
+// ------------------------
 
 void eeprom_init() {
-  if (!eeprom_initialised) {
+  if (!eeprom_initialized) {
     HAL_FLASH_Unlock();
 
     __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR |FLASH_FLAG_PGAERR | FLASH_FLAG_PGPERR | FLASH_FLAG_PGSERR);
 
     /* EEPROM Init */
-    if (EE_Initialise() != EE_OK)
+    if (EE_Initialize() != EE_OK)
       for (;;) HAL_Delay(1); // Spin forever until watchdog reset
 
     HAL_FLASH_Lock();
-    eeprom_initialised = true;
+    eeprom_initialized = true;
   }
 }
 
-void eeprom_write_byte(unsigned char *pos, unsigned char value) {
-  uint16_t eeprom_address = (unsigned) pos;
+void eeprom_write_byte(uint8_t *pos, unsigned char value) {
+  uint16_t eeprom_address = unsigned(pos);
 
   eeprom_init();
 
   HAL_FLASH_Unlock();
   __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR |FLASH_FLAG_PGAERR | FLASH_FLAG_PGPERR | FLASH_FLAG_PGSERR);
 
-  if (EE_WriteVariable(eeprom_address, (uint16_t) value) != EE_OK)
-      for (;;) HAL_Delay(1); // Spin forever until watchdog reset
+  if (EE_WriteVariable(eeprom_address, uint16_t(value)) != EE_OK)
+    for (;;) HAL_Delay(1); // Spin forever until watchdog reset
 
   HAL_FLASH_Lock();
 }
 
-unsigned char eeprom_read_byte(unsigned char *pos) {
-  uint16_t data = 0xFF;
-  uint16_t eeprom_address = (unsigned)pos;
-
+uint8_t eeprom_read_byte(uint8_t *pos) {
   eeprom_init();
 
-  if (EE_ReadVariable(eeprom_address, &data) != EE_OK) {
-    return (unsigned char)data;
-  }
-  return (unsigned char)data;
+  uint16_t data = 0xFF;
+  uint16_t eeprom_address = unsigned(pos);
+  (void)EE_ReadVariable(eeprom_address, &data); // Data unchanged on error
+
+  return uint8_t(data);
 }
 
 void eeprom_read_block(void *__dst, const void *__src, size_t __n) {
   uint16_t data = 0xFF;
-  uint16_t eeprom_address = (unsigned) __src;
+  uint16_t eeprom_address = unsigned(__src);
 
   eeprom_init();
 
@@ -137,4 +107,3 @@ void eeprom_update_block(const void *__src, void *__dst, size_t __n) {
 }
 
 #endif // STM32F7
-

@@ -1,10 +1,10 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2016 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
- * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
- * Copyright (C) 2017 Victor Perez
+ * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
+ * Copyright (c) 2017 Victor Perez
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,22 +20,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
-#ifndef HAL_SERVO_STM32F4_H
-#define HAL_SERVO_STM32F4_H
+#pragma once
 
 #include <Servo.h>
 
 // Inherit and expand on the official library
 class libServo : public Servo {
-public:
+  public:
     int8_t attach(const int pin);
     int8_t attach(const int pin, const int min, const int max);
     void move(const int value);
-private:
+  private:
     uint16_t min_ticks;
     uint16_t max_ticks;
     uint8_t servoIndex;               // index into the channel data for this servo
 };
-
-#endif // HAL_SERVO_STM32F4_H

@@ -1,9 +1,9 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2016 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
- * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
+ * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,20 +19,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+#pragma once
 
 #ifndef __STM32F1__
-  #error "Oops!  Make sure you have an STM32F1 board selected from the 'Tools -> Boards' menu."
+  #error "Oops! Select an STM32F1 board in 'Tools > Board.'"
 #endif
 
 /**
  * 21017 Victor Perez Marlin for stm32f1 test
  */
 
+#define BOARD_NAME           "Misc. STM32F1R"
 #define DEFAULT_MACHINE_NAME "STM32F103RET6"
-#define BOARD_NAME "Marlin for STM32"
 
-// Ignore temp readings during develpment.
-#define BOGUS_TEMPERATURE_FAILSAFE_OVERRIDE
+// Ignore temp readings during development.
+//#define BOGUS_TEMPERATURE_GRACE_PERIOD 2000
 
 //
 // Limit Switches
@@ -92,20 +93,20 @@
 //
 // Temperature Sensors
 //
-#define TEMP_BED_PIN       PA0   // ANALOG NUMBERING
-#define TEMP_0_PIN         PA1   // ANALOG NUMBERING
-#define TEMP_1_PIN         PA2   // ANALOG NUMBERING
+#define TEMP_BED_PIN       PA0   // Analog Input
+#define TEMP_0_PIN         PA1   // Analog Input
+#define TEMP_1_PIN         PA2   // Analog Input
 
 //
 // LCD Pins
 //
-#if ENABLED(ULTRA_LCD)
+#if HAS_SPI_LCD
 
   #if ENABLED(REPRAPWORLD_GRAPHICAL_LCD)
     #define LCD_PINS_RS         49   // CS chip select /SS chip slave select
     #define LCD_PINS_ENABLE     51   // SID (MOSI)
     #define LCD_PINS_D4         52   // SCK (CLK) clock
-  #elif ENABLED(NEWPANEL) && ENABLED(PANEL_ONE)
+  #elif BOTH(NEWPANEL, PANEL_ONE)
     #define LCD_PINS_RS         PB8
     #define LCD_PINS_ENABLE     PD2
     #define LCD_PINS_D4         PB12
@@ -172,7 +173,7 @@
       #define LCD_SDSS          53
       #define SD_DETECT_PIN     49
 
-    #elif ENABLED(VIKI2) || ENABLED(miniVIKI)
+    #elif ANY(VIKI2, miniVIKI)
 
       #define BEEPER_PIN        33
 
@@ -216,7 +217,6 @@
 
       #define KILL_PIN          64
       // GLCD features
-      //#define LCD_CONTRAST   190
       // Uncomment screen orientation
       //#define LCD_SCREEN_ROT_90
       //#define LCD_SCREEN_ROT_180
@@ -261,4 +261,4 @@
     #endif
   #endif // NEWPANEL
 
-#endif // ULTRA_LCD
+#endif // HAS_SPI_LCD

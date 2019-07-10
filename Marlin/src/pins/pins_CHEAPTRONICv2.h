@@ -1,9 +1,9 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2016 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
- * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
+ * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+#pragma once
 
 /**
  * Cheaptronic v2.0 pin assignments
@@ -27,10 +28,10 @@
  */
 
 #ifndef __AVR_ATmega2560__
-  #error "Oops!  Make sure you have 'Arduino Mega' selected from the 'Tools -> Boards' menu."
+  #error "Oops! Select 'Arduino/Genuino Mega or Mega 2560' in 'Tools > Board.'"
 #endif
 
-#define BOARD_NAME         "Cheaptronic v2.0"
+#define BOARD_NAME "Cheaptronic v2.0"
 
 //
 // Limit Switches
@@ -109,7 +110,7 @@
 #endif
 
 //
-// LCD
+// LCD / Controller
 //
 #define LCD_PINS_RS        19
 #define LCD_PINS_ENABLE    42
@@ -119,12 +120,18 @@
 #define LCD_PINS_D7        40
 
 //
-// SD CARD, ROTARY ENCODER, BEEPER
+// Beeper, SD Card, Encoder
 //
-#define SDPOWER            -1
-#define SDSS               53
-#define SD_DETECT_PIN      49
 #define BEEPER_PIN         44
-#define BTN_EN1            11
-#define BTN_EN2            12
-#define BTN_ENC            43
+
+#if ENABLED(SDSUPPORT)
+  #define SDPOWER          -1
+  #define SDSS             53
+  #define SD_DETECT_PIN    49
+#endif
+
+#if ENABLED(NEWPANEL)
+  #define BTN_EN1          11
+  #define BTN_EN2          12
+  #define BTN_ENC          43
+#endif

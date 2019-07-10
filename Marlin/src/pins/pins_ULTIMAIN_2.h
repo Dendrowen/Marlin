@@ -1,9 +1,9 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2016 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
- * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
+ * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+#pragma once
 
 /**
  * Ultiboard v2.0 pin assignments
@@ -33,12 +34,12 @@
  */
 
 #ifndef __AVR_ATmega2560__
-  #error "Oops!  Make sure you have 'Arduino Mega 2560' selected from the 'Tools -> Boards' menu."
+  #error "Oops! Select 'Arduino/Genuino Mega or Mega 2560' in 'Tools > Board.'"
 #endif
 
+#define BOARD_NAME              "Ultimaker 2.x"
 #define DEFAULT_MACHINE_NAME    "Ultimaker"
 #define DEFAULT_SOURCE_CODE_URL "https://github.com/Ultimaker/Marlin"
-#define BOARD_NAME              "Ultimaker 2.x"
 
 //
 // Limit Switches
@@ -97,6 +98,8 @@
   #define FAN_PIN           7
 #endif
 
+#define ORIG_E0_AUTO_FAN_PIN 77
+
 //
 // Misc. Functions
 //
@@ -126,10 +129,10 @@
 //
 // M3/M4/M5 - Spindle/Laser Control
 //
-#if ENABLED(SPINDLE_LASER_ENABLE)   // use the LED_PIN for spindle speed control or case light
+#if HAS_CUTTER   // use the LED_PIN for spindle speed control or case light
   #undef LED_PIN
   #define SPINDLE_DIR_PIN          16
-  #define SPINDLE_LASER_ENABLE_PIN 17   // Pin should have a pullup!
+  #define SPINDLE_LASER_ENA_PIN    17   // Pin should have a pullup!
   #define SPINDLE_LASER_PWM_PIN     8   // MUST BE HARDWARE PWM
 #else
   #undef LED_PIN

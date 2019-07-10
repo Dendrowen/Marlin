@@ -1,9 +1,9 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2016 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
- * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
+ * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,23 +19,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+#pragma once
 
 #if !defined(__STM32F1__) && !defined(__STM32F4__)
-  #error "Oops!  Make sure you have an STM32F1/4 board selected from the 'Tools -> Boards' menu."
+  #error "Oops! Select an STM32F1/4 board in 'Tools > Board.'"
 #endif
 
 /**
  * 21017 Victor Perez Marlin for stm32f1 test
  */
 
-#define DEFAULT_MACHINE_NAME "STM3R Mini"
-#define BOARD_NAME "Marlin for STM32"
+#define BOARD_NAME           "STM3R Mini"
+#define DEFAULT_MACHINE_NAME BOARD_NAME
 
 // Enable I2C_EEPROM for testing
 #define I2C_EEPROM
 
-// Ignore temp readings during develpment.
-#define BOGUS_TEMPERATURE_FAILSAFE_OVERRIDE
+// Ignore temp readings during development.
+//#define BOGUS_TEMPERATURE_GRACE_PERIOD 2000
 
 //
 // Limit Switches
@@ -106,21 +107,21 @@
 #define TEMP_2_PIN         PA3
 
 // Laser control
-#if ENABLED(SPINDLE_LASER_ENABLE)
+#if HAS_CUTTER
   #define SPINDLE_LASER_PWM_PIN     PB8
-  #define SPINDLE_LASER_ENABLE_PIN  PD5
+  #define SPINDLE_LASER_ENA_PIN     PD5
 #endif
 
 //
 // LCD Pins
 //
-#if ENABLED(ULTRA_LCD)
+#if HAS_SPI_LCD
 
   #if ENABLED(REPRAPWORLD_GRAPHICAL_LCD)
     #define LCD_PINS_RS         49   // CS chip select /SS chip slave select
     #define LCD_PINS_ENABLE     51   // SID (MOSI)
     #define LCD_PINS_D4         52   // SCK (CLK) clock
-  #elif ENABLED(NEWPANEL) && ENABLED(PANEL_ONE)
+  #elif BOTH(NEWPANEL, PANEL_ONE)
     #define LCD_PINS_RS         PB8
     #define LCD_PINS_ENABLE     PD2
     #define LCD_PINS_D4         PB12
@@ -187,7 +188,7 @@
       #define LCD_SDSS          53
       #define SD_DETECT_PIN     49
 
-    #elif ENABLED(VIKI2) || ENABLED(miniVIKI)
+    #elif ANY(VIKI2, miniVIKI)
 
       #define BEEPER_PIN        33
 
@@ -232,7 +233,6 @@
 
       #define KILL_PIN          64
       // GLCD features
-      //#define LCD_CONTRAST   190
       // Uncomment screen orientation
       //#define LCD_SCREEN_ROT_90
       //#define LCD_SCREEN_ROT_180
@@ -277,4 +277,4 @@
     #endif
   #endif // NEWPANEL
 
-#endif // ULTRA_LCD
+#endif // HAS_SPI_LCD

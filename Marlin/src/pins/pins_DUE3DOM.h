@@ -1,9 +1,9 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2016 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
- * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
+ * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,13 +19,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+#pragma once
 
 /**
  * DUE3DOM pin assignments
  */
 
 #ifndef __SAM3X8E__
-  #error "Oops!  Make sure you have 'Arduino Due' selected from the 'Tools -> Boards' menu."
+  #error "Oops! Select 'Arduino Due' in 'Tools > Board.'"
 #endif
 
 #define BOARD_NAME "DUE3DOM"
@@ -85,9 +86,9 @@
 
 // SPI for Max6675 or Max31855 Thermocouple
 #if DISABLED(SDSUPPORT)
-  #define MAX6675_SS        -1
+  #define MAX6675_SS_PIN   -1
 #else
-  #define MAX6675_SS        -1
+  #define MAX6675_SS_PIN   -1
 #endif
 
 //
@@ -112,7 +113,7 @@
 //
 // LCD / Controller
 //
-#if ENABLED(ULTRA_LCD)
+#if HAS_SPI_LCD
 
   #define LCD_PINS_RS       42
   #define LCD_PINS_ENABLE   43
@@ -146,7 +147,7 @@
     #define SDSS             4
     #define SD_DETECT_PIN   14
 
-  #elif ENABLED(SSD1306_OLED_I2C_CONTROLLER)
+  #elif HAS_SSD1306_OLED_I2C
 
     #define BTN_EN1         50
     #define BTN_EN2         52
@@ -167,4 +168,4 @@
 
     #define BEEPER_PIN      -1
   #endif // SPARK_FULL_GRAPHICS
-#endif // ULTRA_LCD
+#endif // HAS_SPI_LCD

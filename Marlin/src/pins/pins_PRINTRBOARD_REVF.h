@@ -1,9 +1,9 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2017 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
- * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
+ * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+#pragma once
 
 /**
  *  Rev B  2 JUN 2017
@@ -33,7 +34,7 @@
  *  Teensyduino -  https://www.pjrc.com/teensy/teensyduino.html
  *  Installation - https://www.pjrc.com/teensy/td_download.html
  *
- *    Select Teensy++ 2.0 in Arduino IDE from the 'Tools -> Boards' menu
+ *    Select Teensy++ 2.0 in Arduino IDE from the 'Tools > Board' menu
  *
  *    Note: With Teensyduino extension, the Arduino IDE will report 130048 bytes of program storage space available,
  *    but there is actually only 122880 bytes due to the larger DFU bootloader shipped by default on all Printrboard RevF.
@@ -48,7 +49,7 @@
  *          hardware directory in Arduino.  The Arduino hardware directory will probably
  *          be located in a path similar to this: C:\Program Files (x86)\Arduino\hardware.
  *       3. Restart Arduino.
- *       4. Select "Printrboard" from the 'Tools -> Boards' menu.
+ *       4. Select "Printrboard" from the 'Tools > Board' menu.
  *
  *  Teensyduino is the most popular and easiest option.
  */
@@ -63,14 +64,15 @@
  */
 
 #ifndef __AVR_AT90USB1286__
-  #error "Oops!  Make sure you have 'Teensy++ 2.0' or 'Printrboard' selected from the 'Tools -> Boards' menu."
+  #error "Oops! Select 'Teensy++ 2.0' or 'Printrboard' in 'Tools > Board.'"
 #endif
 
 #ifndef USBCON
   #error "USBCON should be defined by the platform for this board."
 #endif
 
-#define BOARD_NAME         "Printrboard Rev.F"
+#define BOARD_NAME "Printrboard Rev.F"
+
 // Disable JTAG pins so EXP1 pins work correctly
 // (Its pins are used for the Extrudrboard and filament sensor, for example).
 #define DISABLE_JTAG
@@ -199,7 +201,7 @@
 //
 //#define USE_INTERNAL_SD
 
-#if ENABLED(ULTRA_LCD)
+#if HAS_SPI_LCD
   #define LCD_PINS_RS       9   // E1       JP11-11
   #define LCD_PINS_ENABLE   8   // E0       JP11-10
   #define LCD_PINS_D4       7   // D7       JP11-8
@@ -207,7 +209,7 @@
   #define LCD_PINS_D6       5   // D5       JP11-6
   #define LCD_PINS_D7       4   // D4       JP11-5
 
-  #if ENABLED(VIKI2) || ENABLED(miniVIKI)
+  #if ANY(VIKI2, miniVIKI)
 
     #define BEEPER_PIN      8   // E0       JP11-10
     #define DOGLCD_A0      40   // F2       JP2-2

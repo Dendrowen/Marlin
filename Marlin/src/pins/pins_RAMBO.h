@@ -1,9 +1,9 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2016 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
- * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
+ * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+#pragma once
 
 /**
  * IMPORTANT NOTE:
@@ -41,7 +42,7 @@
  */
 
 #ifndef __AVR_ATmega2560__
-  #error "Oops!  Make sure you have 'Arduino Mega 2560' selected from the 'Tools -> Boards' menu."
+  #error "Oops! Select 'Arduino/Genuino Mega or Mega 2560' in 'Tools > Board.'"
 #endif
 
 #define BOARD_NAME "Rambo"
@@ -149,8 +150,14 @@
 // M3/M4/M5 - Spindle/Laser Control
 //
 #define SPINDLE_LASER_PWM_PIN    45   // MUST BE HARDWARE PWM
-#define SPINDLE_LASER_ENABLE_PIN 31   // Pin should have a pullup!
+#define SPINDLE_LASER_ENA_PIN    31   // Pin should have a pullup!
 #define SPINDLE_DIR_PIN          32
+
+//
+// M7/M8/M9 - Coolant Control
+//
+#define COOLANT_MIST_PIN   22
+#define COOLANT_FLOOD_PIN  44
 
 //
 // Průša i3 MK2 Multiplexer Support
@@ -162,7 +169,7 @@
 //
 // LCD / Controller
 //
-#if ENABLED(ULTRA_LCD)
+#if HAS_SPI_LCD
 
   #define KILL_PIN         80
 
@@ -175,7 +182,7 @@
     #define LCD_PINS_D6     74
     #define LCD_PINS_D7     75
 
-    #if ENABLED(VIKI2) || ENABLED(miniVIKI)
+    #if ANY(VIKI2, miniVIKI)
       #define BEEPER_PIN   44
       // NB: Panucatt's Viki 2.0 wiring diagram (v1.2) indicates that the
       //     beeper/buzzer is connected to pin 33; however, the pin used in the
@@ -228,4 +235,4 @@
 
   #endif // !NEWPANEL
 
-#endif // ULTRA_LCD
+#endif // HAS_SPI_LCD

@@ -1,9 +1,9 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2016 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
- * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
+ * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,16 +19,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+#pragma once
 
 /**
  * MegaTronics pin assignments
  */
 
 #ifndef __AVR_ATmega2560__
-  #error "Oops!  Make sure you have 'Arduino Mega' selected from the 'Tools -> Boards' menu."
+  #error "Oops! Select 'Arduino/Genuino Mega or Mega 2560' in 'Tools > Board.'"
 #endif
 
-#define BOARD_NAME         "Megatronics"
+#define BOARD_NAME "Megatronics"
 //
 // Limit Switches
 //
@@ -104,7 +105,7 @@
 //
 #define BEEPER_PIN         33
 
-#if ENABLED(ULTRA_LCD) && ENABLED(NEWPANEL)
+#if BOTH(ULTRA_LCD, NEWPANEL)
 
   #define LCD_PINS_RS     16
   #define LCD_PINS_ENABLE 17
@@ -120,11 +121,11 @@
 
   #define SD_DETECT_PIN   -1   // RAMPS doesn't use this
 
-#endif // ULTRA_LCD && NEWPANEL
+#endif // HAS_SPI_LCD && NEWPANEL
 
 //
 // M3/M4/M5 - Spindle/Laser Control
 //
 #define SPINDLE_LASER_PWM_PIN     3   // MUST BE HARDWARE PWM
-#define SPINDLE_LASER_ENABLE_PIN  4   // Pin should have a pullup!
+#define SPINDLE_LASER_ENA_PIN     4   // Pin should have a pullup!
 #define SPINDLE_DIR_PIN          11

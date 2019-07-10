@@ -1,10 +1,10 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2016 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
- * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
- * Copyright (C) 2017 Victor Perez
+ * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
+ * Copyright (c) 2017 Victor Perez
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,20 +20,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+#pragma once
 
 /**
  * Fast I/O interfaces for STM32F7
  * These use GPIO functions instead of Direct Port Manipulation, as on AVR.
  */
 
-#ifndef _FASTIO_STM32F7_H
-#define _FASTIO_STM32F7_H
-
 #define _BV(b) (1 << (b))
 
 #define READ(IO)                digitalRead(IO)
 #define WRITE(IO,V)             digitalWrite(IO,V)
-#define WRITE_VAR(IO,V)         WRITE(IO,V)
 
 #define _GET_MODE(IO)
 #define _SET_MODE(IO,M)         pinMode(IO, M)
@@ -45,13 +42,22 @@
 #define SET_INPUT_PULLUP(IO)    _SET_MODE(IO, INPUT_PULLUP)                       /*!< Input with Pull-up activation         */
 #define SET_INPUT_PULLDOWN(IO)  _SET_MODE(IO, INPUT_PULLDOWN)                     /*!< Input with Pull-down activation       */
 #define SET_OUTPUT(IO)          OUT_WRITE(IO, LOW)
+#define SET_PWM(IO)             _SET_MODE(IO, PWM)
 
 #define TOGGLE(IO)              OUT_WRITE(IO, !READ(IO))
 
-#define GET_INPUT(IO)
-#define GET_OUTPUT(IO)
-#define GET_TIMER(IO)
+#define IS_INPUT(IO)
+#define IS_OUTPUT(IO)
 
+#define PWM_PIN(P)              true
+
+// digitalRead/Write wrappers
+#define extDigitalRead(IO)    digitalRead(IO)
+#define extDigitalWrite(IO,V) digitalWrite(IO,V)
+
+//
+// Pins Definitions
+//
 #define PORTA 0
 #define PORTB 1
 #define PORTC 2
@@ -180,5 +186,3 @@
 #define PG13 _STM32_PIN(G, 13)
 #define PG14 _STM32_PIN(G, 14)
 #define PG15 _STM32_PIN(G, 15)
-
-#endif // _FASTIO_STM32F7_H
